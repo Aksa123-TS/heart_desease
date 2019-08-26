@@ -12,7 +12,7 @@ from sklearn import metrics
 
 # import warnings filter
 from warnings import simplefilter
-df = pd.read_csv("C:/Users/SHIVA/Desktop/heart/heart/heart.csv")
+df = pd.read_csv("./heart.csv")
 print(df.head())
 col = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg',
        'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal', 'target']
