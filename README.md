@@ -9,6 +9,7 @@ To execute the program in windows :
 To execute the program in Linux or Ubuntu:
 
    chmod u+x heart.py # to give execution permission
+   
    ./heart.py
 
 you can edit the default values in the following part and add your own data . If you are edit the following part then, don't forget to change the values in list v as well
