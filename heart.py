@@ -1,66 +1,85 @@
 import pandas as pd
-import scipy
 from numpy import reshape
 import numpy as np
-from sklearn.feature_selection import RFE
 from sklearn.linear_model import LogisticRegression
-from sklearn import model_selection
-from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import train_test_split
-from sklearn.model_selection import GridSearchCV
-from sklearn import metrics
-
-# import warnings filter
-from warnings import simplefilter
-df = pd.read_csv("./heart.csv")
-col = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg',
-       'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal', 'target']
-df.columns = col
-df.replace("?", np.nan, inplace=True)
-df['ca'] = pd.to_numeric(df['ca'], errors='coerce')
-df[['age', 'sex', 'fbs', 'exang', 'ca']] = df[['age', 'sex', 'fbs', 'exang', 'ca']].astype(int)
-df[['trestbps', 'chol', 'thalach', 'oldpeak']] = df[['trestbps', 'chol', 'thalach', 'oldpeak']].astype(float)
-df['target'].replace(to_replace=[1, 2, 3, 4], value=1, inplace=True)
-print(df.head())
-df_X = df.drop('target', axis=1)
-df_y = df['target']
-train_x,test_x,train_labels,test_labels=train_test_split(df_X,df_y,test_size=0.25,random_state=42)
-simplefilter(action='ignore', category=FutureWarning)
-
-logreg = LogisticRegression()
-logreg.fit(train_x,train_labels)
-y_pred=logreg.predict(test_x)
-
 from sklearn.preprocessing import StandardScaler
-sc_X = StandardScaler()
-train_x = sc_X.fit_transform(train_x)
-test_x = sc_X.transform(test_x)
-import sklearn.pipeline
 from sklearn.neural_network import MLPClassifier
 from sklearn.decomposition import KernelPCA
 from imblearn.pipeline import make_pipeline
+from warnings import simplefilter  # import warnings_filter
+#from sklearn.feature_selection import RFE
+#from sklearn import model_selection
+#from sklearn.model_selection import cross_val_score
+#from sklearn import metrics
 
-select = sklearn.feature_selection.SelectPercentile(sklearn.feature_selection.f_classif)
+
+df = pd.read_csv("./heart.csv")  # read the data file
+col = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg',
+       'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal', 'target']
+
+# take the columns as a list
+df.columns = col 
+
+df.replace("?", np.nan, inplace=True)
+# Convert ca values to a numeric type. Using coerce can set invalid parsing will be as NaN
+df['ca'] = pd.to_numeric(df['ca'], errors='coerce') 
+
+# Convert all data to int and float format
+df[['age', 'sex', 'fbs', 'exang','ca']].astype(int)
+df[['trestbps', 'chol', 'thalach', 'oldpeak']].astype(float)
+
+# target values contain 1,2,3,4 so ,replacing these values into 1, so that target must contain only 1 and 0
+df['target'].replace(to_replace=[1, 2, 3, 4], value=1, inplace=True)
+
+
+# df_x contains data without target data  and df_y contains only target data .After that, split it into 25% test and 75% train data
+
+df_X = df.drop('target', axis=1)
+df_y = df['target']
+train_x, test_x, train_labels, test_labels = train_test_split(df_X, df_y, test_size=0.25, random_state= 42)
+
+simplefilter(action='ignore', category=FutureWarning)  # ignore future warning
+
+logreg = LogisticRegression()       # use logistic regression because target has 0 and  1 
+logreg.fit(train_x, train_labels)   # generalizes to similar data to that on which it was trained.
+y_pred = logreg.predict(test_x)     # predict data and store the predicted data in y_pred
+
+
+sc_X = StandardScaler()  # Standardize features by removing the mean and scaling to unit variance
+
+# Fit to data, then "transform" it with the previously computed mean and std to autoscale the data (subtract mean from all values and then divide it by std).
+train_x = sc_X.fit_transform(train_x)
+test_x = sc_X.transform(test_x)
+
+# ‘tanh’: the hyperbolic tan function, returns f(x) = tanh(x),‘lbfgs’ :is an optimizer in the family of quasi-Newton methods,Constant learning rates are always smaller than 1 
 clf = MLPClassifier(solver='lbfgs', learning_rate='constant', activation='tanh')
-kernel = KernelPCA()
-    
+
+kernel = KernelPCA()#Non-linear dimensionality reduction through the use of kernels.
+
+# The pipeline object is in the form of (key, value) pairs. Key is a string that has the name for a particular step and value is the name of the function or actual method. 
+
 pipeline = make_pipeline(kernel, clf)
-pipeline.fit(train_x,train_labels)
-t1=input("enter the number")
-t2=input("enter the number")
-t3=input("enter the number")
-t4=input("enter the number")
-t5=input("enter the number")
-t6=input("enter the number")
-t7=input("enter the number")
-t8=input("enter the number")
-t9=input("enter the number")
-t10=input("enter the number")
-t11=input("enter the number")
-t12=input("enter the number")
-t13=input("enter the number")
-v = [t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13]
-answer = np.array(v)
-answer = answer.reshape(1,-1)
-answer = sc_X.transform(answer)
-print("Predicts: " + str(pipeline.predict(answer)))
+pipeline.fit(train_x, train_labels)
+
+# setting some default values 
+age = 59
+sex = 1  # female=1 male=0
+cp = 2
+trestbps = 150
+chol = 212
+fbs = 1
+restecg = 1
+thalach = 157
+exang = 0
+oldpeak = 1.6
+slope = 2
+ca = 0
+thal = 2 
+
+v = [age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]  # Creating a list using these values
+answer = np.array(v)  # Convert it as array
+answer = answer.reshape(1, -1)  # Reshape the array to 2 dimensional format
+answer = sc_X.transform(answer) # Normalize the data as the training data format
+
+print("Predicts: " + str(pipeline.predict(answer)))  # Finaly predict and print the result
