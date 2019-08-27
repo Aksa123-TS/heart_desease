@@ -8,10 +8,6 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.decomposition import KernelPCA
 from imblearn.pipeline import make_pipeline
 from warnings import simplefilter  # import warnings_filter
-#from sklearn.feature_selection import RFE
-#from sklearn import model_selection
-#from sklearn.model_selection import cross_val_score
-#from sklearn import metrics
 
 
 df = pd.read_csv("./heart.csv")  # read the data file
