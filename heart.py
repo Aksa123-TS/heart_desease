@@ -13,13 +13,10 @@ from sklearn import metrics
 # import warnings filter
 from warnings import simplefilter
 df = pd.read_csv("./heart.csv")
-print(df.head())
 col = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg',
        'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal', 'target']
 df.columns = col
-print(df.head())
 df.replace("?", np.nan, inplace=True)
-print(df.isnull().sum())
 df['ca'] = pd.to_numeric(df['ca'], errors='coerce')
 df[['age', 'sex', 'fbs', 'exang', 'ca']] = df[['age', 'sex', 'fbs', 'exang', 'ca']].astype(int)
 df[['trestbps', 'chol', 'thalach', 'oldpeak']] = df[['trestbps', 'chol', 'thalach', 'oldpeak']].astype(float)
@@ -28,17 +25,12 @@ print(df.head())
 df_X = df.drop('target', axis=1)
 df_y = df['target']
 train_x,test_x,train_labels,test_labels=train_test_split(df_X,df_y,test_size=0.25,random_state=42)
-print("shape train",train_x.shape)
-print("shape test",train_labels.shape)
-print("shape train",test_x.shape)
-print("shape test",test_labels.shape)
 simplefilter(action='ignore', category=FutureWarning)
-print(test_labels)
 
 logreg = LogisticRegression()
 logreg.fit(train_x,train_labels)
 y_pred=logreg.predict(test_x)
-print(y_pred)
+
 from sklearn.preprocessing import StandardScaler
 sc_X = StandardScaler()
 train_x = sc_X.fit_transform(train_x)
